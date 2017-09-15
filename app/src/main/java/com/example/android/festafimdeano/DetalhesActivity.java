@@ -24,6 +24,10 @@ public class DetalhesActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_detalhes);
         ButterKnife.bind(this);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+
         securityPreferences = new SecurityPreferences(this);
 
         checkParticipate.setOnClickListener(this);

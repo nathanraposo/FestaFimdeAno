@@ -1,7 +1,11 @@
 package com.example.android.festafimdeano;
 
+
+
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -10,9 +14,13 @@ import android.widget.TextView;
 import com.example.android.festafimdeano.constants.FimDeAnoConstants;
 import com.example.android.festafimdeano.util.SecurityPreferences;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @BindView(R.id.text_today)
@@ -23,16 +31,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button buttonConfirm;
 
     private SecurityPreferences securityPreferences;
+    //criando o formato da dat
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+
 
         securityPreferences = new SecurityPreferences(this);
         buttonConfirm.setOnClickListener(this);
-        veriticaPresenca();
+        //setando a data de hoje no textToday
+        textToday.setText(SIMPLE_DATE_FORMAT.format(Calendar.getInstance().getTime()));
+
+        String diasFaltando = String.format("%s %s", String.valueOf(getCalculaDiasFinalAno()),
+                getString(R.string.dias));
+        textDaysLeft.setText(diasFaltando);
+
     }
 
     @Override
@@ -43,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume(){
         super.onResume();
+        veriticaPresenca();
     }
 
     @Override
@@ -50,7 +71,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
     }
 
+    @Override
+    protected void onStop(){
+        super.onStop();
+    }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+    }
 
     private void veriticaPresenca() {
         String presence = securityPreferences.getStoreString(FimDeAnoConstants.PRESENCE);
@@ -73,5 +102,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             startActivity(intent);
         }
+    }
+
+    public int getCalculaDiasFinalAno(){
+        Calendar calendarToday = Calendar.getInstance();
+        int today = calendarToday.get(Calendar.DAY_OF_YEAR);
+
+
+        Calendar calendarUltimoDia= Calendar.getInstance();
+        int ultimoDia = calendarUltimoDia.getActualMaximum(Calendar.DAY_OF_YEAR);
+        return ultimoDia - today;
     }
 }
