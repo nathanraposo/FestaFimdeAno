@@ -1,1 +1,2 @@
-# FestaFimdeAno Um app  desenvolvido acompanhando curso da udacity
+# Festa Fim de Ano 
+APP Desenvolvido Acompanhando Curso da Udacity
